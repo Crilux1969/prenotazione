@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazione Campi da Beach-Volley Arzilla - Estate 2025</title>
     <style>
-        /* Stile esistente */
+        /* Stile invariato */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -140,7 +140,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-        /* Nuove classi per le cornici */
         .slot-libero {
             border: 2px solid #00FF00; /* Verde per slot liberi */
         }
@@ -179,7 +178,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo1')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file1" accept=".csv" onchange="importaCSV(event)">
+                    <input type="file" id="importa-file1" accept=".csv" onchange="importaCSV(event, 'campo1')">
                     <button onclick="document.getElementById('importa-file1').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo1">
@@ -204,7 +203,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo2')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file2" accept=".csv" onchange="importaCSV(event)">
+                    <input type="file" id="importa-file2" accept=".csv" onchange="importaCSV(event, 'campo2')">
                     <button onclick="document.getElementById('importa-file2').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo2">
@@ -229,7 +228,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo3')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file3" accept=".csv" onchange="importaCSV(event)">
+                    <input type="file" id="importa-file3" accept=".csv" onchange="importaCSV(event, 'campo3')">
                     <button onclick="document.getElementById('importa-file3').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo3">
@@ -254,7 +253,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo4')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file4" accept=".csv" onchange="importaCSV(event)">
+                    <input type="file" id="importa-file4" accept=".csv" onchange="importaCSV(event, 'campo4')">
                     <button onclick="document.getElementById('importa-file4').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo4">
@@ -279,7 +278,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo5')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file5" accept=".csv" onchange="importaCSV(event)">
+                    <input type="file" id="importa-file5" accept=".csv" onchange="importaCSV(event, 'campo5')">
                     <button onclick="document.getElementById('importa-file5').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo5">
@@ -446,7 +445,6 @@
         // Aggiorna il calendario
         function aggiornaCalendario(campo) {
             const tabella = document.getElementById(`tabella-${campo}`);
-            // Imposta tutte le celle come libere (cornice verde) inizialmente
             for (let i = 1; i < tabella.rows.length; i++) {
                 for (let j = 1; j < tabella.rows[i].cells.length; j++) {
                     tabella.rows[i].cells[j].className = 'slot-libero';
@@ -454,10 +452,9 @@
                 }
             }
 
-            // Popola le celle con le prenotazioni e applica cornice rossa
             prenotazioni[campo].forEach(p => {
                 const cell = tabella.rows[p.index + 1].cells[p.giorno];
-                cell.className = 'slot-prenotato'; // Cornice rossa per slot prenotati
+                cell.className = 'slot-prenotato';
                 const ora = orari[p.index];
                 let classe = p.inizio ? "prenotazione-inizio" : p.fine ? "prenotazione-fine" : "prenotazione-mezzo";
                 let content = `<span class="${classe}">${p.nome}</span>`;
@@ -528,21 +525,26 @@
             document.body.removeChild(link);
         }
 
-        // Importa prenotazioni da CSV per tutti i campi
-        function importaCSV(event) {
+        // Importa prenotazioni da CSV per un campo specifico
+        function importaCSV(event, campo) {
             const file = event.target.files[0];
-            if (!file) return;
+            if (!file) {
+                alert("Nessun file selezionato!");
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
                 const rows = text.split("\n").map(row => row.split(","));
 
-                campi.forEach(campo => prenotazioni[campo] = []);
+                // Pulisci solo le prenotazioni del campo corrente
+                prenotazioni[campo] = [];
 
+                // Carica i dati dal CSV per il campo specificato
                 for (let i = 1; i < rows.length; i++) {
-                    const [campo, giorno, orario, nome, inizio, fine, spunta] = rows[i];
-                    if (campo && giorno && orario && nome && campi.includes(campo)) {
+                    const [csvCampo, giorno, orario, nome, inizio, fine, spunta] = rows[i];
+                    if (csvCampo && csvCampo.trim() === campo && giorno && orario && nome) {
                         const index = orari.indexOf(orario.trim());
                         if (index !== -1) {
                             prenotazioni[campo].push({
@@ -557,10 +559,13 @@
                     }
                 }
 
-                campi.forEach(campo => {
-                    localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
-                    aggiornaCalendario(campo);
-                });
+                // Aggiorna localStorage e calendario solo per il campo corrente
+                localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
+                aggiornaCalendario(campo);
+                alert(`Prenotazioni caricate con successo per ${campo}!`);
+            };
+            reader.onerror = function() {
+                alert("Errore durante la lettura del file CSV!");
             };
             reader.readAsText(file);
         }
