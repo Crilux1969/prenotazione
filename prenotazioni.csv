@@ -1,0 +1,68 @@
+Campo,Giorno,Orario,Nome,Inizio,Fine,Spunta
+campo1,2,12:00,alma,true,false,undefined
+campo1,2,12:30,alma,false,false,undefined
+campo1,2,13:00,alma,false,false,undefined
+campo1,2,13:30,alma,false,true,undefined
+campo1,2,8:00,kk,true,false,true
+campo1,2,8:30,kk,false,false,undefined
+campo1,2,9:00,kk,false,true,undefined
+campo1,3,8:00,francesco,true,false,true
+campo1,3,8:30,francesco,false,false,undefined
+campo1,3,9:00,francesco,false,true,undefined
+campo1,4,8:00,simone,true,false,undefined
+campo1,4,8:30,simone,false,false,undefined
+campo1,4,9:00,simone,false,false,undefined
+campo1,4,9:30,simone,false,true,undefined
+campo1,5,8:00,amo,true,false,undefined
+campo1,5,8:30,amo,false,false,undefined
+campo1,5,9:00,amo,false,false,undefined
+campo1,5,9:30,amo,false,false,undefined
+campo1,5,10:00,amo,false,true,undefined
+campo1,6,8:00,lllllll,true,false,undefined
+campo1,6,8:30,lllllll,false,false,undefined
+campo1,6,9:00,lllllll,false,false,undefined
+campo1,6,9:30,lllllll,false,false,undefined
+campo1,6,10:00,lllllll,false,true,undefined
+campo1,7,8:00,san giovanni da siena,true,false,undefined
+campo1,7,8:30,san giovanni da siena,false,false,undefined
+campo1,7,9:00,san giovanni da siena,false,false,undefined
+campo1,7,9:30,san giovanni da siena,false,false,undefined
+campo1,7,10:00,san giovanni da siena,false,false,undefined
+campo1,7,10:30,san giovanni da siena,false,true,undefined
+campo1,1,10:00,ssa,true,false,undefined
+campo1,1,10:30,ssa,false,false,undefined
+campo1,1,11:00,ssa,false,true,undefined
+campo3,1,8:00,lucio,true,false,undefined
+campo3,1,8:30,lucio,false,false,undefined
+campo3,1,9:00,lucio,false,false,undefined
+campo3,1,9:30,lucio,false,false,undefined
+campo3,1,10:00,lucio,false,true,undefined
+campo4,5,13:30,anna1,true,false,undefined
+campo4,5,14:00,anna1,false,false,undefined
+campo4,5,14:30,anna1,false,true,undefined
+campo4,4,14:30,CRISTINA,true,false,undefined
+campo4,4,15:00,CRISTINA,false,false,undefined
+campo4,4,15:30,CRISTINA,false,false,undefined
+campo4,4,16:00,CRISTINA,false,false,undefined
+campo4,4,16:30,CRISTINA,false,false,undefined
+campo4,4,17:00,CRISTINA,false,false,undefined
+campo4,4,17:30,CRISTINA,false,false,undefined
+campo4,4,18:00,CRISTINA,false,false,undefined
+campo4,4,18:30,CRISTINA,false,false,undefined
+campo4,4,19:00,CRISTINA,false,false,undefined
+campo4,4,19:30,CRISTINA,false,false,undefined
+campo4,4,20:00,CRISTINA,false,false,undefined
+campo4,4,20:30,CRISTINA,false,false,undefined
+campo4,4,21:00,CRISTINA,false,true,undefined
+campo4,1,8:00,sandro,true,false,undefined
+campo4,1,8:30,sandro,false,false,undefined
+campo4,1,9:00,sandro,false,true,undefined
+campo5,1,10:00,simo,true,false,undefined
+campo5,1,10:30,simo,false,false,undefined
+campo5,1,11:00,simo,false,false,undefined
+campo5,1,11:30,simo,false,true,undefined
+campo5,2,9:30,marco,true,false,undefined
+campo5,2,10:00,marco,false,false,undefined
+campo5,2,10:30,marco,false,false,undefined
+campo5,2,11:00,marco,false,false,undefined
+campo5,2,11:30,marco,false,true,undefined
