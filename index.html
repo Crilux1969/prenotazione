@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazione Campi da Beach-Volley Arzilla - Estate 2025</title>
     <style>
-        /* Stile invariato */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -15,10 +14,11 @@
         }
         h1 {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             color: #fff;
             margin: 0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 1.5em;
         }
         .header {
             position: fixed;
@@ -32,15 +32,15 @@
         .campi-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 10px;
             flex-wrap: wrap;
-            padding: 20px;
+            padding: 10px;
         }
         .campo {
             background-color: rgba(135, 206, 235, 0.9);
             border: 2px solid #FFD700;
-            padding: 20px;
-            width: 150px;
+            padding: 15px;
+            width: 120px;
             text-align: center;
             border-radius: 10px;
             cursor: pointer;
@@ -54,17 +54,18 @@
             color: #333;
             font-weight: bold;
             display: block;
+            font-size: 1em;
         }
         .campo-attivo {
-            width: 170px;
+            width: 130px;
             border: 3px solid red;
         }
         .content {
-            margin-top: 180px;
+            margin-top: 140px;
         }
         .calendario {
-            margin: 20px auto;
-            width: 90%;
+            margin: 15px auto;
+            width: 95%;
             max-width: 1000px;
             display: none;
             background: rgba(255, 255, 255, 0.5);
@@ -81,9 +82,9 @@
         }
         th, td {
             border: 1px solid #FFD700;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
-            font-size: 14px;
+            font-size: 0.9em;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
         th {
@@ -105,22 +106,26 @@
             background-color: #ff4444;
             color: white;
             border: none;
-            padding: 5px;
+            padding: 6px;
             cursor: pointer;
             border-radius: 5px;
             display: block;
-            margin: 5px auto 0;
+            margin: 5px auto;
+            font-size: 0.9em;
         }
         .form-prenotazione {
             text-align: center;
-            margin: 20px;
+            margin: 15px;
         }
         .form-prenotazione input, .form-prenotazione select, .form-prenotazione button {
             margin: 5px;
-            padding: 8px;
+            padding: 10px;
             border-radius: 5px;
             border: 1px solid #FFD700;
             background-color: rgba(255, 255, 255, 0.7);
+            font-size: 1em;
+            width: 90%;
+            max-width: 300px;
         }
         .form-prenotazione button {
             background-color: rgba(135, 206, 235, 0.9);
@@ -132,7 +137,7 @@
         .faccina {
             background: none;
             border: none;
-            font-size: 18px;
+            font-size: 1.2em;
             cursor: pointer;
             padding: 0;
             margin-top: 5px;
@@ -141,10 +146,98 @@
             margin-right: auto;
         }
         .slot-libero {
-            border: 2px solid #00FF00; /* Verde per slot liberi */
+            border: 2px solid #00FF00;
         }
         .slot-prenotato {
-            border: 2px solid #FF0000; /* Rosso per slot prenotati */
+            border: 2px solid #FF0000;
+        }
+
+        /* Media Queries per Tablet */
+        @media (max-width: 1024px) and (min-width: 600px) {
+            h1 {
+                font-size: 1.3em;
+                padding: 10px;
+            }
+            .header {
+                padding-bottom: 5px;
+            }
+            .campi-container {
+                gap: 8px;
+                padding: 8px;
+            }
+            .campo {
+                width: 100px;
+                padding: 10px;
+            }
+            .campo-attivo {
+                width: 110px;
+            }
+            .content {
+                margin-top: 120px;
+            }
+            .calendario {
+                width: 98%;
+                padding: 8px;
+            }
+            th, td {
+                padding: 6px;
+                font-size: 0.85em;
+            }
+            .form-prenotazione input, .form-prenotazione select, .form-prenotazione button {
+                padding: 8px;
+                font-size: 0.95em;
+                width: 85%;
+            }
+            .cancella {
+                padding: 5px;
+                font-size: 0.85em;
+            }
+            .faccina {
+                font-size: 1.1em;
+            }
+        }
+
+        /* Media Queries per Smartphone (opzionale) */
+        @media (max-width: 599px) {
+            h1 {
+                font-size: 1.1em;
+                padding: 8px;
+            }
+            .campi-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+            }
+            .campo {
+                width: 80%;
+                padding: 8px;
+            }
+            .campo-attivo {
+                width: 85%;
+            }
+            .content {
+                margin-top: 100px;
+            }
+            .calendario {
+                width: 100%;
+                padding: 5px;
+            }
+            th, td {
+                padding: 4px;
+                font-size: 0.75em;
+            }
+            .form-prenotazione input, .form-prenotazione select, .form-prenotazione button {
+                padding: 6px;
+                font-size: 0.9em;
+                width: 95%;
+            }
+            .cancella {
+                padding: 4px;
+                font-size: 0.8em;
+            }
+            .faccina {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
@@ -178,7 +271,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo1')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file1" accept=".csv" onchange="importaCSV(event, 'campo1')">
+                    <input type="file" id="importa-file1" accept=".csv" onchange="importaCSV(event)">
                     <button onclick="document.getElementById('importa-file1').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo1">
@@ -203,7 +296,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo2')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file2" accept=".csv" onchange="importaCSV(event, 'campo2')">
+                    <input type="file" id="importa-file2" accept=".csv" onchange="importaCSV(event)">
                     <button onclick="document.getElementById('importa-file2').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo2">
@@ -228,7 +321,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo3')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file3" accept=".csv" onchange="importaCSV(event, 'campo3')">
+                    <input type="file" id="importa-file3" accept=".csv" onchange="importaCSV(event)">
                     <button onclick="document.getElementById('importa-file3').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo3">
@@ -253,7 +346,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo4')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file4" accept=".csv" onchange="importaCSV(event, 'campo4')">
+                    <input type="file" id="importa-file4" accept=".csv" onchange="importaCSV(event)">
                     <button onclick="document.getElementById('importa-file4').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo4">
@@ -278,7 +371,7 @@
                     </select>
                     <button onclick="aggiungiPrenotazione('campo5')">Prenota</button>
                     <br>
-                    <input type="file" id="importa-file5" accept=".csv" onchange="importaCSV(event, 'campo5')">
+                    <input type="file" id="importa-file5" accept=".csv" onchange="importaCSV(event)">
                     <button onclick="document.getElementById('importa-file5').click()">Carica Prenotazioni</button>
                 </div>
                 <table id="tabella-campo5">
@@ -525,8 +618,8 @@
             document.body.removeChild(link);
         }
 
-        // Importa prenotazioni da CSV per un campo specifico
-        function importaCSV(event, campo) {
+        // Importa prenotazioni da CSV per tutti i campi
+        function importaCSV(event) {
             const file = event.target.files[0];
             if (!file) {
                 alert("Nessun file selezionato!");
@@ -538,16 +631,16 @@
                 const text = e.target.result;
                 const rows = text.split("\n").map(row => row.split(","));
 
-                // Pulisci solo le prenotazioni del campo corrente
-                prenotazioni[campo] = [];
+                // Pulisci le prenotazioni di tutti i campi
+                campi.forEach(campo => prenotazioni[campo] = []);
 
-                // Carica i dati dal CSV per il campo specificato
+                // Carica i dati dal CSV per tutti i campi
                 for (let i = 1; i < rows.length; i++) {
                     const [csvCampo, giorno, orario, nome, inizio, fine, spunta] = rows[i];
-                    if (csvCampo && csvCampo.trim() === campo && giorno && orario && nome) {
+                    if (csvCampo && giorno && orario && nome && campi.includes(csvCampo.trim())) {
                         const index = orari.indexOf(orario.trim());
                         if (index !== -1) {
-                            prenotazioni[campo].push({
+                            prenotazioni[csvCampo.trim()].push({
                                 giorno: parseInt(giorno),
                                 index: index,
                                 nome: nome.trim(),
@@ -559,10 +652,12 @@
                     }
                 }
 
-                // Aggiorna localStorage e calendario solo per il campo corrente
-                localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
-                aggiornaCalendario(campo);
-                alert(`Prenotazioni caricate con successo per ${campo}!`);
+                // Aggiorna localStorage e calendario per tutti i campi
+                campi.forEach(campo => {
+                    localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
+                    aggiornaCalendario(campo);
+                });
+                alert("Prenotazioni caricate con successo per tutti i campi!");
             };
             reader.onerror = function() {
                 alert("Errore durante la lettura del file CSV!");
