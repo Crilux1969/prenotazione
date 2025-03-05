@@ -95,7 +95,7 @@
             font-weight: bold;
         }
         .prenotazione-mezzo {
-            color: #143ff6;
+            color: #87CEEB;
             font-weight: bold;
         }
         .prenotazione-fine {
@@ -153,7 +153,7 @@
         }
 
         /* Media Queries per Tablet */
-        @media (max-width: 1920px) and (min-width: 1080px) {
+        @media (max-width: 1024px) and (min-width: 600px) {
             h1 {
                 font-size: 1.3em;
                 padding: 10px;
@@ -197,7 +197,7 @@
             }
         }
 
-        /* Media Queries per Smartphone (opzionale) */
+        /* Media Queries per Smartphone */
         @media (max-width: 599px) {
             h1 {
                 font-size: 1.1em;
@@ -488,7 +488,7 @@
             });
         }
 
-        // Aggiungi prenotazione
+        // Aggiungi prenotazione con ID univoco
         function aggiungiPrenotazione(campo) {
             const nome = document.getElementById(`nome${campo.slice(-1)}`).value.trim();
             const giorno = parseInt(document.getElementById(`giorno${campo.slice(-1)}`).value);
@@ -516,8 +516,12 @@
                 }
             }
 
+            // Genera un ID univoco per questa prenotazione
+            const idPrenotazione = Date.now() + Math.random().toString(36).substr(2, 9);
+
             for (let i = indexInizio; i <= indexFine; i++) {
                 prenotazioni[campo].push({ 
+                    id: idPrenotazione, // Aggiunto ID univoco
                     giorno: giorno, 
                     index: i, 
                     nome: nome, 
@@ -535,7 +539,7 @@
             document.getElementById(`ora-fine${campo.slice(-1)}`).value = "";
         }
 
-        // Aggiorna il calendario
+        // Aggiorna il calendario con ID nei pulsanti "Cancella"
         function aggiornaCalendario(campo) {
             const tabella = document.getElementById(`tabella-${campo}`);
             for (let i = 1; i < tabella.rows.length; i++) {
@@ -557,22 +561,22 @@
 
                 if (prevEnd && p.inizio) {
                     content = `<span class="prenotazione-fine">${prevEnd.nome}</span>` +
-                              `<br><button class="cancella" onclick="cancellaPrenotazione('${prevEnd.nome}', ${p.giorno}, '${campo}')">Cancella ${prevEnd.nome}</button>` +
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${prevEnd.id}', '${campo}')">Cancella ${prevEnd.nome}</button>` +
                               `<br>${ora}` +
                               `<br><span class="prenotazione-inizio">${p.nome}</span>` +
-                              `<br><button class="cancella" onclick="cancellaPrenotazione('${p.nome}', ${p.giorno}, '${campo}')">Cancella ${p.nome}</button>` +
-                              `<br><button class="faccina" onclick="cambiaSpunta('${p.nome}', ${p.giorno}, '${campo}')">${p.spunta ? '✓' : '○'}</button>`;
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${p.id}', '${campo}')">Cancella ${p.nome}</button>` +
+                              `<br><button class="faccina" onclick="cambiaSpunta('${p.id}', '${campo}')">${p.spunta ? '✓' : '○'}</button>`;
                 } else if (nextStart && p.fine) {
                     content = `<span class="prenotazione-fine">${p.nome}</span>` +
-                              `<br><button class="cancella" onclick="cancellaPrenotazione('${p.nome}', ${p.giorno}, '${campo}')">Cancella ${p.nome}</button>` +
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${p.id}', '${campo}')">Cancella ${p.nome}</button>` +
                               `<br>${ora}` +
                               `<br><span class="prenotazione-inizio">${nextStart.nome}</span>` +
-                              `<br><button class="cancella" onclick="cancellaPrenotazione('${nextStart.nome}', ${p.giorno}, '${campo}')">Cancella ${nextStart.nome}</button>` +
-                              `<br><button class="faccina" onclick="cambiaSpunta('${nextStart.nome}', ${p.giorno}, '${campo}')">${nextStart.spunta ? '✓' : '○'}</button>`;
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${nextStart.id}', '${campo}')">Cancella ${nextStart.nome}</button>` +
+                              `<br><button class="faccina" onclick="cambiaSpunta('${nextStart.id}', '${campo}')">${nextStart.spunta ? '✓' : '○'}</button>`;
                 } else {
                     if (p.inizio) {
-                        content += `<br><button class="cancella" onclick="cancellaPrenotazione('${p.nome}', ${p.giorno}, '${campo}')">Cancella</button>` +
-                                   `<br><button class="faccina" onclick="cambiaSpunta('${p.nome}', ${p.giorno}, '${campo}')">${p.spunta ? '✓' : '○'}</button>`;
+                        content += `<br><button class="cancella" onclick="cancellaPrenotazione('${p.id}', '${campo}')">Cancella</button>` +
+                                   `<br><button class="faccina" onclick="cambiaSpunta('${p.id}', '${campo}')">${p.spunta ? '✓' : '○'}</button>`;
                     }
                 }
 
@@ -580,10 +584,10 @@
             });
         }
 
-        // Funzione per cambiare il simbolo in spunta
-        function cambiaSpunta(nome, giorno, campo) {
+        // Funzione per cambiare il simbolo in spunta usando l'ID
+        function cambiaSpunta(id, campo) {
             prenotazioni[campo].forEach(p => {
-                if (p.nome === nome && p.giorno === giorno && p.inizio) {
+                if (p.id === id && p.inizio) {
                     p.spunta = true;
                 }
             });
@@ -592,20 +596,20 @@
             esportaTuttiCSV();
         }
 
-        // Cancella prenotazione (tutto lo slot)
-        function cancellaPrenotazione(nome, giorno, campo) {
-            prenotazioni[campo] = prenotazioni[campo].filter(p => !(p.nome === nome && p.giorno === giorno));
+        // Cancella prenotazione usando l'ID univoco
+        function cancellaPrenotazione(id, campo) {
+            prenotazioni[campo] = prenotazioni[campo].filter(p => p.id !== id);
             localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
             aggiornaCalendario(campo);
             esportaTuttiCSV();
         }
 
-        // Esporta tutte le prenotazioni in un unico CSV
+        // Esporta tutte le prenotazioni in un unico CSV (aggiornato per includere l'ID)
         function esportaTuttiCSV() {
-            const csvRows = ["Campo,Giorno,Orario,Nome,Inizio,Fine,Spunta"];
+            const csvRows = ["Campo,Giorno,Orario,Nome,Inizio,Fine,Spunta,ID"];
             campi.forEach(campo => {
                 prenotazioni[campo].forEach(p => {
-                    csvRows.push(`${campo},${p.giorno},${orari[p.index]},${p.nome},${p.inizio},${p.fine},${p.spunta}`);
+                    csvRows.push(`${campo},${p.giorno},${orari[p.index]},${p.nome},${p.inizio},${p.fine},${p.spunta},${p.id}`);
                 });
             });
             const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
@@ -618,7 +622,7 @@
             document.body.removeChild(link);
         }
 
-        // Importa prenotazioni da CSV per tutti i campi
+        // Importa prenotazioni da CSV per tutti i campi (aggiornato per gestire l'ID)
         function importaCSV(event) {
             const file = event.target.files[0];
             if (!file) {
@@ -636,11 +640,12 @@
 
                 // Carica i dati dal CSV per tutti i campi
                 for (let i = 1; i < rows.length; i++) {
-                    const [csvCampo, giorno, orario, nome, inizio, fine, spunta] = rows[i];
+                    const [csvCampo, giorno, orario, nome, inizio, fine, spunta, id] = rows[i];
                     if (csvCampo && giorno && orario && nome && campi.includes(csvCampo.trim())) {
                         const index = orari.indexOf(orario.trim());
                         if (index !== -1) {
                             prenotazioni[csvCampo.trim()].push({
+                                id: id || (Date.now() + Math.random().toString(36).substr(2, 9)), // Usa ID esistente o generane uno nuovo
                                 giorno: parseInt(giorno),
                                 index: index,
                                 nome: nome.trim(),
