@@ -521,7 +521,7 @@
 
             for (let i = indexInizio; i <= indexFine; i++) {
                 prenotazioni[campo].push({ 
-                    id: idPrenotazione, // Aggiunto ID univoco
+                    id: idPrenotazione,
                     giorno: giorno, 
                     index: i, 
                     nome: nome, 
@@ -539,7 +539,7 @@
             document.getElementById(`ora-fine${campo.slice(-1)}`).value = "";
         }
 
-        // Aggiorna il calendario con ID nei pulsanti "Cancella"
+        // Aggiorna il calendario
         function aggiornaCalendario(campo) {
             const tabella = document.getElementById(`tabella-${campo}`);
             for (let i = 1; i < tabella.rows.length; i++) {
@@ -584,7 +584,7 @@
             });
         }
 
-        // Funzione per cambiare il simbolo in spunta usando l'ID
+        // Funzione per cambiare il simbolo in spunta
         function cambiaSpunta(id, campo) {
             prenotazioni[campo].forEach(p => {
                 if (p.id === id && p.inizio) {
@@ -596,15 +596,16 @@
             esportaTuttiCSV();
         }
 
-        // Cancella prenotazione usando l'ID univoco
+        // Cancella prenotazione specifica usando l'ID
         function cancellaPrenotazione(id, campo) {
+            console.log(`Tentativo di cancellazione: ID=${id}, Campo=${campo}`); // Debug
             prenotazioni[campo] = prenotazioni[campo].filter(p => p.id !== id);
             localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
             aggiornaCalendario(campo);
             esportaTuttiCSV();
         }
 
-        // Esporta tutte le prenotazioni in un unico CSV (aggiornato per includere l'ID)
+        // Esporta tutte le prenotazioni in un unico CSV
         function esportaTuttiCSV() {
             const csvRows = ["Campo,Giorno,Orario,Nome,Inizio,Fine,Spunta,ID"];
             campi.forEach(campo => {
@@ -622,7 +623,7 @@
             document.body.removeChild(link);
         }
 
-        // Importa prenotazioni da CSV per tutti i campi (aggiornato per gestire l'ID)
+        // Importa prenotazioni da CSV per tutti i campi
         function importaCSV(event) {
             const file = event.target.files[0];
             if (!file) {
@@ -645,7 +646,7 @@
                         const index = orari.indexOf(orario.trim());
                         if (index !== -1) {
                             prenotazioni[csvCampo.trim()].push({
-                                id: id || (Date.now() + Math.random().toString(36).substr(2, 9)), // Usa ID esistente o generane uno nuovo
+                                id: id || (Date.now() + Math.random().toString(36).substr(2, 9)),
                                 giorno: parseInt(giorno),
                                 index: index,
                                 nome: nome.trim(),
