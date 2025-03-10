@@ -356,11 +356,12 @@
                 const slotOccupato = prenotazioni[campo].some(p => 
                     p.giorno === giorno && 
                     p.index === oraIndex && 
-                    !p.fine // Permetti di iniziare dove una prenotazione finisce
+                    !p.fine && // Blocca se non è la fine
+                    p.nome !== nome // Permetti se è lo stesso nome
                 );
 
                 if (slotOccupato) {
-                    alert("Non puoi iniziare una prenotazione su uno slot già occupato!");
+                    alert("Non puoi iniziare una prenotazione su uno slot già occupato da un altro utente!");
                     return;
                 }
 
@@ -377,6 +378,7 @@
                 const cell = e.target.closest('td');
                 if (!cell || cell.cellIndex === 0) return;
 
+                const nome = document.getElementById(`nome${campo.slice(-1)}`).value.trim();
                 const startRow = startCell.parentNode.rowIndex;
                 const endRow = cell.parentNode.rowIndex;
                 const startCol = startCell.cellIndex;
@@ -393,15 +395,19 @@
                     for (let i = minRow; i <= maxRow; i++) {
                         const currentCell = tabella.rows[i].cells[startCol];
                         const oraIndex = i - 1;
+                        const isEndSlot = i === maxRow;
                         const slotOccupato = prenotazioni[campo].some(p => 
                             p.giorno === giorno && 
                             p.index === oraIndex && 
-                            !(p.fine && i === startRow) // Permetti lo slot iniziale se è una fine
+                            !(p.fine && i === startRow) && // Permetti se è la fine e siamo all'inizio
+                            !(p.inizio && isEndSlot) && // Permetti se è l'inizio e siamo alla fine
+                            p.nome !== nome // Permetti se è lo stesso nome
                         );
 
                         if (slotOccupato) {
                             selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
                             selectedCells = [];
+                            alert("Non puoi sovrapporre a una prenotazione di un altro utente!");
                             return;
                         }
 
@@ -412,6 +418,9 @@
                     if (selectedCells.length < 3) {
                         selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
                         selectedCells = [];
+                        if (selectedCells.length > 0) {
+                            alert("La prenotazione deve essere di almeno 1 ora e mezza (3 slot consecutivi)!");
+                        }
                     }
                 }
             });
@@ -431,6 +440,18 @@
                 const nome = document.getElementById(`nome${campo.slice(-1)}`).value.trim();
                 const idPrenotazione = Date.now() + Math.random().toString(36).substr(2, 9);
 
+                // Cancella eventuali prenotazioni esistenti dello stesso nome nel range selezionato
+                const giorno = startCell.cellIndex;
+                const minIndex = Math.min(startCell.parentNode.rowIndex - 1, selectedCells[selectedCells.length - 1].parentNode.rowIndex - 1);
+                const maxIndex = Math.max(startCell.parentNode.rowIndex - 1, selectedCells[selectedCells.length - 1].parentNode.rowIndex - 1);
+                prenotazioni[campo] = prenotazioni[campo].filter(p => 
+                    !(p.giorno === giorno && 
+                      p.index >= minIndex && 
+                      p.index <= maxIndex && 
+                      p.nome === nome)
+                );
+
+                // Aggiungi la nuova prenotazione
                 selectedCells.forEach((cell, index) => {
                     const giorno = cell.cellIndex;
                     const oraIndex = cell.parentNode.rowIndex - 1;
@@ -471,11 +492,12 @@
                 const slotOccupato = prenotazioni[campo].some(p => 
                     p.giorno === giorno && 
                     p.index === oraIndex && 
-                    !p.fine
+                    !p.fine && 
+                    p.nome !== nome
                 );
 
                 if (slotOccupato) {
-                    alert("Non puoi iniziare una prenotazione su uno slot già occupato!");
+                    alert("Non puoi iniziare una prenotazione su uno slot già occupato da un altro utente!");
                     return;
                 }
 
@@ -493,6 +515,7 @@
                 const cell = document.elementFromPoint(touch.clientX, touch.clientY).closest('td');
                 if (!cell || cell.cellIndex === 0) return;
 
+                const nome = document.getElementById(`nome${campo.slice(-1)}`).value.trim();
                 const startRow = startCell.parentNode.rowIndex;
                 const endRow = cell.parentNode.rowIndex;
                 const startCol = startCell.cellIndex;
@@ -509,15 +532,19 @@
                     for (let i = minRow; i <= maxRow; i++) {
                         const currentCell = tabella.rows[i].cells[startCol];
                         const oraIndex = i - 1;
+                        const isEndSlot = i === maxRow;
                         const slotOccupato = prenotazioni[campo].some(p => 
                             p.giorno === giorno && 
                             p.index === oraIndex && 
-                            !(p.fine && i === startRow)
+                            !(p.fine && i === startRow) && 
+                            !(p.inizio && isEndSlot) && 
+                            p.nome !== nome
                         );
 
                         if (slotOccupato) {
                             selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
                             selectedCells = [];
+                            alert("Non puoi sovrapporre a una prenotazione di un altro utente!");
                             return;
                         }
 
@@ -528,6 +555,9 @@
                     if (selectedCells.length < 3) {
                         selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
                         selectedCells = [];
+                        if (selectedCells.length > 0) {
+                            alert("La prenotazione deve essere di almeno 1 ora e mezza (3 slot consecutivi)!");
+                        }
                     }
                 }
             });
@@ -547,6 +577,18 @@
                 const nome = document.getElementById(`nome${campo.slice(-1)}`).value.trim();
                 const idPrenotazione = Date.now() + Math.random().toString(36).substr(2, 9);
 
+                // Cancella eventuali prenotazioni esistenti dello stesso nome nel range selezionato
+                const giorno = startCell.cellIndex;
+                const minIndex = Math.min(startCell.parentNode.rowIndex - 1, selectedCells[selectedCells.length - 1].parentNode.rowIndex - 1);
+                const maxIndex = Math.max(startCell.parentNode.rowIndex - 1, selectedCells[selectedCells.length - 1].parentNode.rowIndex - 1);
+                prenotazioni[campo] = prenotazioni[campo].filter(p => 
+                    !(p.giorno === giorno && 
+                      p.index >= minIndex && 
+                      p.index <= maxIndex && 
+                      p.nome === nome)
+                );
+
+                // Aggiungi la nuova prenotazione
                 selectedCells.forEach((cell, index) => {
                     const giorno = cell.cellIndex;
                     const oraIndex = cell.parentNode.rowIndex - 1;
