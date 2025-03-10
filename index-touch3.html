@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazione Campi da Beach-Volley Arzilla - Estate 2025</title>
     <style>
-        /* [Stili invariati, copia e incolla i tuoi stili qui] */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -13,7 +12,228 @@
             background-size: cover;
             min-height: 100vh;
         }
-        /* ... resto degli stili ... */
+        h1 {
+            text-align: center;
+            padding: 15px;
+            color: #fff;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 1.5em;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(135, 206, 235, 0.8);
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .campi-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+        .campo {
+            background-color: rgba(135, 206, 235, 0.9);
+            border: 2px solid #FFD700;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, width 0.2s, border 0.2s;
+        }
+        .campo:hover {
+            transform: scale(1.05);
+        }
+        .campo a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            font-size: 1em;
+        }
+        .campo-attivo {
+            width: 130px;
+            border: 3px solid red;
+        }
+        .content {
+            margin-top: 140px;
+        }
+        .calendario {
+            margin: 15px auto;
+            width: 95%;
+            max-width: 1000px;
+            display: none;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 240, 0.7);
+            user-select: none;
+        }
+        th, td {
+            border: 1px solid #FFD700;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+        th {
+            background-color: rgba(135, 206, 235, 0.85);
+        }
+        .prenotazione-inizio {
+            color: green;
+            font-weight: bold;
+        }
+        .prenotazione-mezzo {
+            color: #87CEEB;
+            font-weight: bold;
+        }
+        .prenotazione-fine {
+            color: red;
+            font-weight: bold;
+        }
+        .cancella {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 5px auto;
+            font-size: 0.9em;
+        }
+        .form-prenotazione {
+            text-align: center;
+            margin: 15px;
+        }
+        .form-prenotazione button {
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #FFD700;
+            background-color: rgba(135, 206, 235, 0.9);
+            font-size: 1em;
+            width: 90%;
+            max-width: 300px;
+            cursor: pointer;
+        }
+        #importa-file {
+            display: none;
+        }
+        .faccina {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0;
+            margin-top: 5px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .slot-libero {
+            border: 2px solid #00FF00;
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+        .slot-prenotato {
+            border: 2px solid #FF0000;
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        .slot-selezionato {
+            border: 2px dashed #0000FF;
+            background-color: rgba(0, 0, 255, 0.2);
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            text-align: center;
+        }
+        .popup input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #FFD700;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .popup button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .popup .conferma {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .popup .annulla {
+            background-color: #ff4444;
+            color: white;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+        }
+
+        @media (max-width: 1024px) and (min-width: 600px) {
+            h1 { font-size: 1.3em; padding: 10px; }
+            .header { padding-bottom: 5px; }
+            .campi-container { gap: 8px; padding: 8px; }
+            .campo { width: 100px; padding: 10px; }
+            .campo-attivo { width: 110px; }
+            .content { margin-top: 120px; }
+            .calendario { width: 98%; padding: 8px; }
+            th, td { padding: 6px; font-size: 0.85em; }
+            .form-prenotazione button { padding: 8px; font-size: 0.95em; width: 85%; }
+            .cancella { padding: 5px; font-size: 0.85em; }
+            .faccina { font-size: 1.1em; }
+            .popup { width: 80%; max-width: 400px; }
+        }
+
+        @media (max-width: 599px) {
+            h1 { font-size: 1.1em; padding: 8px; }
+            .campi-container { flex-direction: column; align-items: center; gap: 5px; }
+            .campo { width: 80%; padding: 8px; }
+            .campo-attivo { width: 85%; }
+            .content { margin-top: 100px; }
+            .calendario { width: 100%; padding: 5px; }
+            th, td { padding: 4px; font-size: 0.75em; }
+            .form-prenotazione button { padding: 6px; font-size: 0.9em; width: 95%; }
+            .cancella { padding: 4px; font-size: 0.8em; }
+            .faccina { font-size: 1em; }
+            .popup { width: 90%; max-width: 300px; }
+            .popup input { font-size: 0.9em; }
+            .popup button { font-size: 0.9em; padding: 8px 15px; }
+        }
     </style>
 </head>
 <body>
@@ -38,7 +258,6 @@
                     <tr id="header-row-campo1"><th>Orario</th></tr>
                 </table>
             </div>
-            <!-- Ripeti per campo2, campo3, campo4, campo5 -->
             <div id="campo2" class="calendario">
                 <div class="form-prenotazione">
                     <input type="file" id="importa-file2" accept=".csv" onchange="importaCSV(event)">
@@ -132,8 +351,8 @@
 
         let prenotazioni = {};
         const GITHUB_TOKEN = "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"; // Sostituisci con il tuo PAT
-        const REPO_OWNER = "Crilux1969"; // Sostituisci con il tuo username GitHub
-        const REPO_NAME = "prenotazione"; // Sostituisci con il nome del repository
+        const REPO_OWNER = "Crilux1969"; // Il tuo username GitHub
+        const REPO_NAME = "prenotazione"; // Il nome del tuo repository
 
         async function caricaPrenotazioniDaGitHub() {
             try {
@@ -144,7 +363,7 @@
                     }
                 });
                 const data = await response.json();
-                const content = atob(data.content); // Decodifica da Base64
+                const content = atob(data.content);
                 prenotazioni = JSON.parse(content);
                 campi.forEach(campo => aggiornaCalendario(campo));
             } catch (error) {
@@ -155,7 +374,6 @@
 
         async function salvaPrenotazioniSuGitHub() {
             try {
-                // Ottieni lo SHA del file attuale
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/prenotazioni.json`, {
                     headers: {
                         "Authorization": `token ${GITHUB_TOKEN}`,
@@ -165,8 +383,7 @@
                 const data = await response.json();
                 const sha = data.sha;
 
-                // Salva il nuovo contenuto
-                const content = btoa(JSON.stringify(prenotazioni, null, 2)); // Codifica in Base64
+                const content = btoa(JSON.stringify(prenotazioni, null, 2));
                 await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/prenotazioni.json`, {
                     method: "PUT",
                     headers: {
@@ -185,7 +402,7 @@
             }
         }
 
-        caricaPrenotazioniDaGitHub(); // Carica all'avvio
+        caricaPrenotazioniDaGitHub();
 
         function mostraCalendario(campo) {
             campi.forEach(c => {
@@ -459,7 +676,7 @@
 
             localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
             aggiornaCalendario(campo);
-            salvaPrenotazioniSuGitHub(); // Salva su GitHub
+            salvaPrenotazioniSuGitHub();
 
             selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
             pendingCampo = null;
