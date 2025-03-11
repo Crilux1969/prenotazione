@@ -357,7 +357,7 @@
         async function caricaPrenotazioniDaGitHub() {
             try {
                 console.log("Inizio caricamento da GitHub...");
-                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/prenotazioni.json`, {
+                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/prenotazioni.json`, {
                     headers: {
                         "Authorization": `token ${GITHUB_TOKEN}`,
                         "Accept": "application/vnd.github.v3+json"
@@ -382,7 +382,7 @@
         async function salvaPrenotazioniSuGitHub() {
             try {
                 console.log("Inizio salvataggio su GitHub...");
-                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/prenotazioni.json`, {
+                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/prenotazioni.json`, {
                     headers: {
                         "Authorization": `token ${GITHUB_TOKEN}`,
                         "Accept": "application/vnd.github.v3+json"
@@ -396,7 +396,7 @@
                 console.log("SHA attuale:", sha);
 
                 const content = btoa(JSON.stringify(prenotazioni, null, 2));
-                const updateResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/prenotazioni.json`, {
+                const updateResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/prenotazioni.json`, {
                     method: "PUT",
                     headers: {
                         "Authorization": `token ${GITHUB_TOKEN}`,
