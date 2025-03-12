@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazione Campi da Beach-Volley Arzilla - Estate 2025</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('sfondo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            padding: 15px;
+            color: #fff;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 1.5em;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(135, 206, 235, 0.8);
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .campi-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+        .campo {
+            background-color: rgba(135, 206, 235, 0.9);
+            border: 2px solid #FFD700;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, width 0.2s, border 0.2s;
+        }
+        .campo:hover {
+            transform: scale(1.05);
+        }
+        .campo a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            font-size: 1em;
+        }
+        .campo-attivo {
+            width: 130px;
+            border: 3px solid red;
+        }
+        .content {
+            margin-top: 140px;
+        }
+        .calendario {
+            margin: 15px auto;
+            width: 95%;
+            max-width: 1000px;
+            display: none;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 240, 0.7);
+            user-select: none;
+        }
+        th, td {
+            border: 1px solid #FFD700;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+        th {
+            background-color: rgba(135, 206, 235, 0.85);
+        }
+        .prenotazione-inizio {
+            color: green;
+            font-weight: bold;
+        }
+        .prenotazione-mezzo {
+            color: #87CEEB;
+            font-weight: bold;
+        }
+        .prenotazione-fine {
+            color: red;
+            font-weight: bold;
+        }
+        .cancella {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 5px auto;
+            font-size: 0.9em;
+        }
+        .form-prenotazione {
+            text-align: center;
+            margin: 15px;
+        }
+        .form-prenotazione button {
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #FFD700;
+            background-color: rgba(135, 206, 235, 0.9);
+            font-size: 1em;
+            width: 90%;
+            max-width: 300px;
+            cursor: pointer;
+        }
+        #importa-file {
+            display: none;
+        }
+        .faccina {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0;
+            margin-top: 5px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .slot-libero {
+            border: 2px solid #00FF00;
+            background-color: rgba(0, 255, 0, 0.1);
+        }
+        .slot-prenotato {
+            border: 2px solid #FF0000;
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        .slot-selezionato {
+            border: 2px dashed #0000FF;
+            background-color: rgba(0, 0, 255, 0.2);
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            text-align: center;
+        }
+        .popup input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #FFD700;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .popup button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .popup .conferma {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .popup .annulla {
+            background-color: #ff4444;
+            color: white;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+        }
+
+        @media (max-width: 1024px) and (min-width: 600px) {
+            h1 { font-size: 1.3em; padding: 10px; }
+            .header { padding-bottom: 5px; }
+            .campi-container { gap: 8px; padding: 8px; }
+            .campo { width: 100px; padding: 10px; }
+            .campo-attivo { width: 110px; }
+            .content { margin-top: 120px; }
+            .calendario { width: 98%; padding: 8px; }
+            th, td { padding: 6px; font-size: 0.85em; }
+            .form-prenotazione button { padding: 8px; font-size: 0.95em; width: 85%; }
+            .cancella { padding: 5px; font-size: 0.85em; }
+            .faccina { font-size: 1.1em; }
+            .popup { width: 80%; max-width: 400px; }
+        }
+
+        @media (max-width: 599px) {
+            h1 { font-size: 1.1em; padding: 8px; }
+            .campi-container { flex-direction: column; align-items: center; gap: 5px; }
+            .campo { width: 80%; padding: 8px; }
+            .campo-attivo { width: 85%; }
+            .content { margin-top: 100px; }
+            .calendario { width: 100%; padding: 5px; }
+            th, td { padding: 4px; font-size: 0.75em; }
+            .form-prenotazione button { padding: 6px; font-size: 0.9em; width: 95%; }
+            .cancella { padding: 4px; font-size: 0.8em; }
+            .faccina { font-size: 1em; }
+            .popup { width: 90%; max-width: 300px; }
+            .popup input { font-size: 0.9em; }
+            .popup button { font-size: 0.9em; padding: 8px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="homepage">
+        <div class="header">
+            <h1>Prenotazione Campi da Beach-Volley Arzilla - Estate 2025</h1>
+            <div class="campi-container">
+                <div class="campo" id="btn-campo1"><a onclick="mostraCalendario('campo1')">Campo 1</a></div>
+                <div class="campo" id="btn-campo2"><a onclick="mostraCalendario('campo2')">Campo 2</a></div>
+                <div class="campo" id="btn-campo3"><a onclick="mostraCalendario('campo3')">Campo 3</a></div>
+                <div class="campo" id="btn-campo4"><a onclick="mostraCalendario('campo4')">Campo 4</a></div>
+                <div class="campo" id="btn-campo5"><a onclick="mostraCalendario('campo5')">Campo 5</a></div>
+            </div>
+        </div>
+        <div class="content">
+            <div id="campo1" class="calendario active">
+                <div class="form-prenotazione">
+                    <input type="file" id="importa-file1" accept=".csv" onchange="importaCSV(event)">
+                    <button onclick="document.getElementById('importa-file1').click()">Carica Prenotazioni</button>
+                </div>
+                <table id="tabella-campo1">
+                    <tr id="header-row-campo1"><th>Orario</th></tr>
+                </table>
+            </div>
+            <div id="campo2" class="calendario">
+                <div class="form-prenotazione">
+                    <input type="file" id="importa-file2" accept=".csv" onchange="importaCSV(event)">
+                    <button onclick="document.getElementById('importa-file2').click()">Carica Prenotazioni</button>
+                </div>
+                <table id="tabella-campo2">
+                    <tr id="header-row-campo2"><th>Orario</th></tr>
+                </table>
+            </div>
+            <div id="campo3" class="calendario">
+                <div class="form-prenotazione">
+                    <input type="file" id="importa-file3" accept=".csv" onchange="importaCSV(event)">
+                    <button onclick="document.getElementById('importa-file3').click()">Carica Prenotazioni</button>
+                </div>
+                <table id="tabella-campo3">
+                    <tr id="header-row-campo3"><th>Orario</th></tr>
+                </table>
+            </div>
+            <div id="campo4" class="calendario">
+                <div class="form-prenotazione">
+                    <input type="file" id="importa-file4" accept=".csv" onchange="importaCSV(event)">
+                    <button onclick="document.getElementById('importa-file4').click()">Carica Prenotazioni</button>
+                </div>
+                <table id="tabella-campo4">
+                    <tr id="header-row-campo4"><th>Orario</th></tr>
+                </table>
+            </div>
+            <div id="campo5" class="calendario">
+                <div class="form-prenotazione">
+                    <input type="file" id="importa-file5" accept=".csv" onchange="importaCSV(event)">
+                    <button onclick="document.getElementById('importa-file5').click()">Carica Prenotazioni</button>
+                </div>
+                <table id="tabella-campo5">
+                    <tr id="header-row-campo5"><th>Orario</th></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <h3>Inserisci il nome della prenotazione</h3>
+        <input type="text" id="nome-prenotazione" placeholder="Nome" required>
+        <div>
+            <button class="conferma" onclick="confermaPrenotazione()">Conferma</button>
+            <button class="annulla" onclick="annullaPrenotazione()">Annulla</button>
+        </div>
+    </div>
+
+    <script>
+        const orari = [];
+        for (let h = 8; h <= 23; h++) {
+            orari.push(`${h}:00`);
+            orari.push(`${h}:30`);
+        }
+        orari.push("24:00");
+
+        const giorniSettimana = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+        const campi = ['campo1', 'campo2', 'campo3', 'campo4', 'campo5'];
+        const weekDays = getCurrentWeekDays();
+
+        function getCurrentWeekDays() {
+            const today = new Date();
+            const weekDays = [];
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(today);
+                day.setDate(today.getDate() + i);
+                const dayNumber = day.getDate();
+                const monthNumber = day.getMonth() + 1;
+                const dayOfWeek = giorniSettimana[day.getDay() === 0 ? 6 : day.getDay() - 1];
+                weekDays.push(`${dayNumber}/${monthNumber} ${dayOfWeek}`);
+            }
+            return weekDays;
+        }
+
+        campi.forEach(campo => {
+            const tabella = document.getElementById(`tabella-${campo}`);
+            const headerRow = document.getElementById(`header-row-${campo}`);
+            weekDays.forEach(day => {
+                const th = document.createElement('th');
+                th.textContent = day;
+                headerRow.appendChild(th);
+            });
+            orari.forEach(orario => {
+                const row = tabella.insertRow();
+                row.insertCell().textContent = orario;
+                for (let i = 0; i < 7; i++) row.insertCell();
+            });
+            aggiungiEventiTrascinamento(campo);
+        });
+
+        let prenotazioni = {};
+
+        // Carica prenotazioni da localStorage
+        function caricaPrenotazioniLocali() {
+            console.log("Inizio caricamento da localStorage...");
+            prenotazioni = {};
+            campi.forEach(campo => {
+                const datiSalvati = localStorage.getItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`);
+                if (datiSalvati) {
+                    prenotazioni[campo] = JSON.parse(datiSalvati);
+                } else {
+                    prenotazioni[campo] = [];
+                }
+            });
+            console.log("Prenotazioni caricate da localStorage:", prenotazioni);
+            campi.forEach(campo => aggiornaCalendario(campo));
+        }
+
+        // Salva prenotazioni su localStorage
+        function salvaPrenotazioniLocali() {
+            campi.forEach(campo => {
+                localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
+            });
+            console.log("Prenotazioni salvate in localStorage:", prenotazioni);
+        }
+
+        function mostraCalendario(campo) {
+            campi.forEach(c => {
+                const calendario = document.getElementById(c);
+                const pulsante = document.getElementById(`btn-${c}`);
+                if (c === campo) {
+                    calendario.classList.add('active');
+                    pulsante.classList.add('campo-attivo');
+                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const offset = calendario.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    window.scrollTo({ top: offset, behavior: 'smooth' });
+                } else {
+                    calendario.classList.remove('active');
+                    pulsante.classList.remove('campo-attivo');
+                }
+            });
+        }
+
+        let pendingCampo = null;
+        let pendingSelectedCells = [];
+        let pendingStartCell = null;
+
+        function aggiungiEventiTrascinamento(campo) {
+            const tabella = document.getElementById(`tabella-${campo}`);
+            let isDragging = false;
+            let startCell = null;
+            let selectedCells = [];
+
+            tabella.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'BUTTON') return;
+                const cell = e.target.closest('td');
+                if (!cell || cell.cellIndex === 0) return;
+
+                const giorno = cell.cellIndex;
+                const oraIndex = cell.parentNode.rowIndex - 1;
+                const slotOccupato = prenotazioni[campo].some(p => 
+                    p.giorno === giorno && 
+                    p.index === oraIndex && 
+                    !p.fine
+                );
+
+                if (slotOccupato) {
+                    alert("Non puoi iniziare una prenotazione su uno slot già occupato!");
+                    return;
+                }
+
+                isDragging = true;
+                startCell = cell;
+                selectedCells = [cell];
+                cell.classList.add('slot-selezionato');
+                e.preventDefault();
+            });
+
+            tabella.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const cell = e.target.closest('td');
+                if (!cell || cell.cellIndex === 0) return;
+
+                const startRow = startCell.parentNode.rowIndex;
+                const endRow = cell.parentNode.rowIndex;
+                const startCol = startCell.cellIndex;
+                const endCol = cell.cellIndex;
+
+                tabella.querySelectorAll('.slot-selezionato').forEach(c => c.classList.remove('slot-selezionato'));
+                selectedCells = [];
+
+                if (startCol === endCol) {
+                    const giorno = startCol;
+                    const minRow = Math.min(startRow, endRow);
+                    const maxRow = Math.max(startRow, endRow);
+
+                    for (let i = minRow; i <= maxRow; i++) {
+                        const currentCell = tabella.rows[i].cells[startCol];
+                        const oraIndex = i - 1;
+                        const isEndSlot = i === maxRow;
+                        const slotOccupato = prenotazioni[campo].some(p => 
+                            p.giorno === giorno && 
+                            p.index === oraIndex && 
+                            !(p.fine && i === startRow) && 
+                            !(p.inizio && isEndSlot)
+                        );
+
+                        if (slotOccupato) {
+                            selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
+                            selectedCells = [];
+                            alert("Non puoi sovrapporre a una prenotazione esistente!");
+                            return;
+                        }
+
+                        currentCell.classList.add('slot-selezionato');
+                        selectedCells.push(currentCell);
+                    }
+
+                    if (selectedCells.length < 3) {
+                        selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
+                        selectedCells = [];
+                        if (selectedCells.length > 0) {
+                            alert("La prenotazione deve essere di almeno 1 ora e mezza (3 slot consecutivi)!");
+                        }
+                    }
+                }
+            });
+
+            tabella.addEventListener('mouseup', () => {
+                if (!isDragging || selectedCells.length < 3) {
+                    if (isDragging && selectedCells.length < 3) {
+                        alert("La prenotazione deve essere di almeno 1 ora e mezza (3 slot consecutivi)!");
+                    }
+                    tabella.querySelectorAll('.slot-selezionato').forEach(c => c.classList.remove('slot-selezionato'));
+                    selectedCells = [];
+                    isDragging = false;
+                    startCell = null;
+                    return;
+                }
+
+                pendingCampo = campo;
+                pendingSelectedCells = [...selectedCells];
+                pendingStartCell = startCell;
+                mostraPopup();
+
+                isDragging = false;
+                startCell = null;
+            });
+
+            tabella.addEventListener('touchstart', (e) => {
+                if (e.target.tagName === 'BUTTON') return;
+                const cell = e.target.closest('td');
+                if (!cell || cell.cellIndex === 0) return;
+
+                const giorno = cell.cellIndex;
+                const oraIndex = cell.parentNode.rowIndex - 1;
+                const slotOccupato = prenotazioni[campo].some(p => 
+                    p.giorno === giorno && 
+                    p.index === oraIndex && 
+                    !p.fine
+                );
+
+                if (slotOccupato) {
+                    alert("Non puoi iniziare una prenotazione su uno slot già occupato!");
+                    return;
+                }
+
+                isDragging = true;
+                startCell = cell;
+                selectedCells = [cell];
+                cell.classList.add('slot-selezionato');
+                e.preventDefault();
+            });
+
+            tabella.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+
+                const touch = e.touches[0];
+                const cell = document.elementFromPoint(touch.clientX, touch.clientY).closest('td');
+                if (!cell || cell.cellIndex === 0) return;
+
+                const startRow = startCell.parentNode.rowIndex;
+                const endRow = cell.parentNode.rowIndex;
+                const startCol = startCell.cellIndex;
+                const endCol = cell.cellIndex;
+
+                tabella.querySelectorAll('.slot-selezionato').forEach(c => c.classList.remove('slot-selezionato'));
+                selectedCells = [];
+
+                if (startCol === endCol) {
+                    const giorno = startCol;
+                    const minRow = Math.min(startRow, endRow);
+                    const maxRow = Math.max(startRow, endRow);
+
+                    for (let i = minRow; i <= maxRow; i++) {
+                        const currentCell = tabella.rows[i].cells[startCol];
+                        const oraIndex = i - 1;
+                        const isEndSlot = i === maxRow;
+                        const slotOccupato = prenotazioni[campo].some(p => 
+                            p.giorno === giorno && 
+                            p.index === oraIndex && 
+                            !(p.fine && i === startRow) && 
+                            !(p.inizio && isEndSlot)
+                        );
+
+                        if (slotOccupato) {
+                            selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
+                            selectedCells = [];
+                            alert("Non puoi sovrapporre a una prenotazione esistente!");
+                            return;
+                        }
+
+                        currentCell.classList.add('slot-selezionato');
+                        selectedCells.push(currentCell);
+                    }
+
+                    if (selectedCells.length < 3) {
+                        selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
+                        selectedCells = [];
+                        if (selectedCells.length > 0) {
+                            alert("La prenotazione deve essere di almeno 1 ora e mezza (3 slot consecutivi)!");
+                        }
+                    }
+                }
+            });
+
+            tabella.addEventListener('touchend', () => {
+                if (!isDragging || selectedCells.length < 3) {
+                    if (isDragging && selectedCells.length < 3) {
+                        alert("La prenotazione deve essere di almeno 1 ora e mezza (3 slot consecutivi)!");
+                    }
+                    tabella.querySelectorAll('.slot-selezionato').forEach(c => c.classList.remove('slot-selezionato'));
+                    selectedCells = [];
+                    isDragging = false;
+                    startCell = null;
+                    return;
+                }
+
+                pendingCampo = campo;
+                pendingSelectedCells = [...selectedCells];
+                pendingStartCell = startCell;
+                mostraPopup();
+
+                isDragging = false;
+                startCell = null;
+            });
+        }
+
+        function mostraPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('nome-prenotazione').value = '';
+            document.getElementById('nome-prenotazione').focus();
+        }
+
+        function nascondiPopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function confermaPrenotazione() {
+            const nome = document.getElementById('nome-prenotazione').value.trim();
+            if (!nome) {
+                alert("Inserisci un nome per la prenotazione!");
+                return;
+            }
+
+            const campo = pendingCampo;
+            const selectedCells = pendingSelectedCells;
+            const startCell = pendingStartCell;
+
+            const idPrenotazione = Date.now() + Math.random().toString(36).substr(2, 9);
+
+            const giorno = startCell.cellIndex;
+            const minIndex = Math.min(startCell.parentNode.rowIndex - 1, selectedCells[selectedCells.length - 1].parentNode.rowIndex - 1);
+            const maxIndex = Math.max(startCell.parentNode.rowIndex - 1, selectedCells[selectedCells.length - 1].parentNode.rowIndex - 1);
+            prenotazioni[campo] = prenotazioni[campo].filter(p => 
+                !(p.giorno === giorno && p.index >= minIndex && p.index <= maxIndex && p.nome === nome)
+            );
+
+            selectedCells.forEach((cell, index) => {
+                const giorno = cell.cellIndex;
+                const oraIndex = cell.parentNode.rowIndex - 1;
+
+                prenotazioni[campo].push({
+                    id: idPrenotazione,
+                    giorno: giorno,
+                    index: oraIndex,
+                    nome: nome,
+                    inizio: index === 0,
+                    fine: index === selectedCells.length - 1,
+                    spunta: false
+                });
+            });
+
+            localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
+            aggiornaCalendario(campo);
+            salvaPrenotazioniLocali();
+
+            selectedCells.forEach(c => c.classList.remove('slot-selezionato'));
+            pendingCampo = null;
+            pendingSelectedCells = [];
+            pendingStartCell = null;
+            nascondiPopup();
+        }
+
+        function annullaPrenotazione() {
+            const campo = pendingCampo;
+            const tabella = document.getElementById(`tabella-${campo}`);
+            tabella.querySelectorAll('.slot-selezionato').forEach(c => c.classList.remove('slot-selezionato'));
+            pendingCampo = null;
+            pendingSelectedCells = [];
+            pendingStartCell = null;
+            nascondiPopup();
+        }
+
+        function aggiornaCalendario(campo) {
+            const tabella = document.getElementById(`tabella-${campo}`);
+            for (let i = 1; i < tabella.rows.length; i++) {
+                for (let j = 1; j < tabella.rows[i].cells.length; j++) {
+                    tabella.rows[i].cells[j].className = 'slot-libero';
+                    tabella.rows[i].cells[j].innerHTML = "";
+                }
+            }
+
+            prenotazioni[campo].forEach(p => {
+                const cell = tabella.rows[p.index + 1].cells[p.giorno];
+                cell.className = 'slot-prenotato';
+                const ora = orari[p.index];
+                let classe = p.inizio ? "prenotazione-inizio" : p.fine ? "prenotazione-fine" : "prenotazione-mezzo";
+                let content = `<span class="${classe}">${p.nome}</span>`;
+                
+                const prevEnd = prenotazioni[campo].find(pr => pr.giorno === p.giorno && pr.index === p.index && pr.fine && pr.nome !== p.nome);
+                const nextStart = prenotazioni[campo].find(pr => pr.giorno === p.giorno && pr.index === p.index && pr.inizio && pr.nome !== p.nome);
+
+                if (prevEnd && p.inizio) {
+                    content = `<span class="prenotazione-fine">${prevEnd.nome}</span>` +
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${prevEnd.id}', '${campo}')">Cancella ${prevEnd.nome}</button>` +
+                              `<br>${ora}` +
+                              `<br><span class="prenotazione-inizio">${p.nome}</span>` +
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${p.id}', '${campo}')">Cancella ${p.nome}</button>` +
+                              `<br><button class="faccina" onclick="cambiaSpunta('${p.id}', '${campo}')" ontouchstart="cambiaSpunta('${p.id}', '${campo}')">${p.spunta ? '✓' : '○'}</button>`;
+                } else if (nextStart && p.fine) {
+                    content = `<span class="prenotazione-fine">${p.nome}</span>` +
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${p.id}', '${campo}')">Cancella ${p.nome}</button>` +
+                              `<br>${ora}` +
+                              `<br><span class="prenotazione-inizio">${nextStart.nome}</span>` +
+                              `<br><button class="cancella" onclick="cancellaPrenotazione('${nextStart.id}', '${campo}')">Cancella ${nextStart.nome}</button>` +
+                              `<br><button class="faccina" onclick="cambiaSpunta('${nextStart.id}', '${campo}')" ontouchstart="cambiaSpunta('${nextStart.id}', '${campo}')">${nextStart.spunta ? '✓' : '○'}</button>`;
+                } else if (p.inizio) {
+                    content += `<br><button class="cancella" onclick="cancellaPrenotazione('${p.id}', '${campo}')">Cancella</button>` +
+                               `<br><button class="faccina" onclick="cambiaSpunta('${p.id}', '${campo}')" ontouchstart="cambiaSpunta('${p.id}', '${campo}')">${p.spunta ? '✓' : '○'}</button>`;
+                }
+
+                cell.innerHTML = content;
+            });
+        }
+
+        function cambiaSpunta(id, campo) {
+            prenotazioni[campo].forEach(p => {
+                if (p.id === id && p.inizio) {
+                    p.spunta = !p.spunta;
+                }
+            });
+            localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
+            aggiornaCalendario(campo);
+            salvaPrenotazioniLocali();
+        }
+
+        function cancellaPrenotazione(id, campo) {
+            prenotazioni[campo] = prenotazioni[campo].filter(p => p.id !== id);
+            localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
+            aggiornaCalendario(campo);
+            salvaPrenotazioniLocali();
+        }
+
+        function esportaTuttiCSV() {
+            const csvRows = ["Campo,Giorno,Orario,Nome,Inizio,Fine,Spunta,ID"];
+            campi.forEach(campo => {
+                prenotazioni[campo].forEach(p => {
+                    csvRows.push(`${campo},${p.giorno},${orari[p.index]},${p.nome},${p.inizio},${p.fine},${p.spunta},${p.id}`);
+                });
+            });
+            const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "prenotazioni.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function importaCSV(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                alert("Nessun file selezionato!");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const rows = text.split("\n").map(row => row.split(","));
+
+                campi.forEach(campo => prenotazioni[campo] = []);
+
+                for (let i = 1; i < rows.length; i++) {
+                    const [csvCampo, giorno, orario, nome, inizio, fine, spunta, id] = rows[i];
+                    if (csvCampo && giorno && orario && nome && campi.includes(csvCampo.trim())) {
+                        const index = orari.indexOf(orario.trim());
+                        if (index !== -1) {
+                            prenotazioni[csvCampo.trim()].push({
+                                id: id || (Date.now() + Math.random().toString(36).substr(2, 9)),
+                                giorno: parseInt(giorno),
+                                index: index,
+                                nome: nome.trim(),
+                                inizio: inizio === "true",
+                                fine: fine === "true" || fine.trim() === "true",
+                                spunta: spunta === "true" || spunta.trim() === "true"
+                            });
+                        }
+                    }
+                }
+
+                campi.forEach(campo => {
+                    localStorage.setItem(`prenotazioni${campo.charAt(0).toUpperCase() + campo.slice(1)}`, JSON.stringify(prenotazioni[campo]));
+                    aggiornaCalendario(campo);
+                });
+                salvaPrenotazioniLocali();
+                alert("Prenotazioni caricate con successo per tutti i campi!");
+            };
+            reader.onerror = function() {
+                alert("Errore durante la lettura del file CSV!");
+            };
+            reader.readAsText(file);
+        }
+
+        window.addEventListener("beforeunload", function() {
+            esportaTuttiCSV();
+        });
+
+        // Carica i dati e inizializza la pagina
+        caricaPrenotazioniLocali();
+        mostraCalendario('campo1');
+        document.getElementById('btn-campo1').classList.add('campo-attivo');
+    </script>
+</body>
+</html>
